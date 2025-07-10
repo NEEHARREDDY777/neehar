@@ -255,6 +255,67 @@
       color: var(--accent-color);
       transform: translateY(-3px);
     }
+
+    /* New styles for the contributor section */
+    .contributors-section {
+        margin-top: 40px; /* Space above this section */
+        padding-top: 30px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1); /* Separator line */
+        text-align: center;
+    }
+
+    .contributors-section h2 {
+        font-size: 2rem;
+        color: var(--accent-color);
+        margin-bottom: 20px;
+    }
+
+    .contributor-list {
+        display: flex;
+        justify-content: center;
+        gap: 25px;
+        flex-wrap: wrap;
+    }
+
+    .contributor-item {
+        background-color: rgba(255, 255, 255, 0.05); /* Slightly lighter background for each item */
+        border-radius: 10px;
+        padding: 20px;
+        width: 180px; /* Fixed width for consistency */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .contributor-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    .contributor-item h3 {
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+    }
+
+    .contributor-item a {
+        background-color: var(--primary-color);
+        color: white;
+        padding: 10px 15px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .contributor-item a:hover {
+        background-color: var(--secondary-color);
+        transform: scale(1.05);
+    }
     
     footer {
       background-color: var(--primary-color);
@@ -289,6 +350,16 @@
       
       .contact-card {
         padding: 30px 20px;
+      }
+
+      .contributor-list {
+          flex-direction: column;
+          align-items: center;
+      }
+
+      .contributor-item {
+          width: 80%; /* Make items wider on smaller screens */
+          max-width: 250px;
       }
     }
     
@@ -347,8 +418,8 @@
               <i class="fas fa-map-marker-alt"></i>
             </div>
             <div class="info-text">
-              <h3>amritapuri campus</h3>
-              <p>vallicav,kollam District<br>kerala, 560001</p>
+              <h3>Amritapuri Campus</h3>
+              <p>Vallicav, Kollam District<br>Kerala, 560001</p>
             </div>
           </div>
           
@@ -372,8 +443,8 @@
             <div class="info-text">
               <h3>Email Us</h3>
               <p>
-                <a href="koushikvarma344@gmail.com">koushikvarma344@gmail.com</a><br>
-                <a href="sathwiknayak@longBody.com">sathwiknayak@longBody.com</a>
+                <a href="mailto:koushikvarma344@gmail.com">koushikvarma344@gmail.com</a><br>
+                <a href="mailto:sathwiknayak@longBody.com">sathwiknayak@longBody.com</a>
               </p>
             </div>
           </div>
@@ -448,6 +519,26 @@
           <i class="fab fa-whatsapp"></i>
         </a>
       </div>
+
+      <div class="contributors-section">
+        <h2>Our Valued Contributors</h2>
+        <p>Meet some of the talented students who contributed to our project.</p>
+        <div class="contributor-list">
+          <div class="contributor-item">
+            <h3>Student 1 (Ram)</h3>
+            <a href="pop.html" target="_blank">View Resume <i class="fas fa-external-link-alt"></i></a>
+          </div>
+          <div class="contributor-item">
+            <h3>Student 2 (Sai)</h3>
+            <a href="sai.html" target="_blank">View Resume <i class="fas fa-external-link-alt"></i></a>
+          </div>
+          <div class="contributor-item">
+            <h3>Student 3 (Varma)</h3>
+            <a href="varma.html" target="_blank">View Resume <i class="fas fa-external-link-alt"></i></a>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
   
@@ -459,14 +550,14 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-     
+      
       const contactForm = document.getElementById('contactForm');
       const toast = document.getElementById('toast');
       
       contactForm.addEventListener('submit', function(e) {
         e.preventDefault();
         
-       
+        
         const name = document.getElementById('name').value.trim();
         const email = document.getElementById('email').value.trim();
         const message = document.getElementById('message').value.trim();
@@ -481,10 +572,10 @@
           return;
         }
         
-       
+        
         showToast('Your message has been sent successfully!');
         
-       
+        
         contactForm.reset();
         
         
@@ -530,7 +621,7 @@
       formFields.forEach(field => {
         field.addEventListener('focus', function() {
           console.log(`Field focused: ${this.name}`);
-         
+          
         });
         
         field.addEventListener('blur', function() {
