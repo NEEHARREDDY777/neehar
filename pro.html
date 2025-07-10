@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Home - Car Rental System</title>
+  <style>
+    body {
+      background: url('https://mobiag.com/wp-content/uploads/2019/06/car-rental-fleet.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    nav {
+      background-color: black;
+      display: flex;
+      align-items: center;
+      padding: 10px 20px;
+    }
+
+    nav img {
+      height: 50px;
+      margin-right: 10px;
+    }
+
+    nav h1 {
+      flex-grow: 1;
+      color: white;
+    }
+
+    nav a {
+      color: white;
+      margin: 0 10px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    nav a:hover {
+      color: orange;
+    }
+
+    .container {
+      padding: 20px;
+      background-color: rgba(128, 128, 128, 0.8);
+      border-radius: 10px;
+      margin: 20px;
+    }
+
+    .car-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .car {
+      background: #555555;
+      padding: 15px;
+      border-radius: 10px;
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .car img {
+      width: 200px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 5px;
+      transition: transform 0.3s ease;
+      flex-shrink: 0;
+    }
+
+    .car img:hover {
+      transform: scale(1.1);
+    }
+
+    .car-details {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      color: white;
+    }
+
+    .car-details h3 {
+      margin: 0 0 10px 0;
+    }
+
+    .car-details h3 a {
+      color: white;
+      text-decoration: none;
+    }
+
+    .car-details h3 a:hover {
+      color: orange;
+    }
+
+    .car-details .book-button-link {
+      align-self: flex-start;
+      text-decoration: none;
+    }
+
+    .car-details button {
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      background-color: orange;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      color: white;
+    }
+
+    .car-details button:hover {
+      background-color: darkorange;
+    }
+
+    input[type="text"], select {
+      padding: 8px;
+      margin-top: 10px;
+      margin-bottom: 20px;
+      width: 200px;
+      border: none;
+      border-radius: 5px;
+    }
+
+    .exit-button-container {
+      text-align: center;
+      margin: 40px 0;
+    }
+
+    .exit-button-container button {
+      padding: 10px 20px;
+      background-color: red;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .exit-button-container button:hover {
+      background-color: darkred;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <img src="https://images-platform.99static.com//C86dpN66exfkZPRMadAyxFJZ0z4=/307x1:1074x768/fit-in/500x500/99designs-contests-attachments/59/59172/attachment_59172191" alt="Logo">
+    <h1>Car Rental System</h1>
+    <a href="index.html" onclick="navigate('home')">Home</a>
+    <a href="pro.html">Cars</a>
+    <a href="supercars.html" onclick="navigate('book')">Book Now</a>
+    <a href="contact.html" onclick="navigate('contact')">Contact</a>
+  </nav>
+
+  <div class="container">
+    <h2>Welcome to our Car Rental Service!</h2>
+    <p>Search for available cars:</p>
+    <input type="text" id="search" placeholder="Search by name..." oninput="filterCars()" />
+    <div class="car-list" id="car-listing-section"></div>
+  </div>
+
+  <!-- Exit Button -->
+  <div class="exit-button-container">
+    <button onclick="confirmExit()">Exit</button>
+  </div>
+
+  <script>
+    const cars = [
+      { name: "Toyota Camry", image: "https://media.zigcdn.com/media/model/2024/Dec/toyota-camry_600x400.jpg", price: 60 },
+      { name: "Honda Civic", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbWjLLkHF4PPig0ihSUGtK7ZLf1gPqXeKREw&s", price: 55 },
+      { name: "Ford Mustang", image: "https://imgd.aeplcdn.com/664x374/cw/ec/23766/Ford-Mustang-Left-Front-Three-Quarter-74324.jpg?v=201711021421&q=80", price: 90 },
+      { name: "BMW X5", image: "https://di-uploads-pod23.dealerinspire.com/bmwofowingsmills/uploads/2023/06/TRANSPARENT_cc_2024BMS220013_01_1280_475-1-1024x768.png", price: 120 },
+      { name: "Audi A4", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcThpi0W_ZBygiGeuyukstB4QipXK_FjGx7hKQ&s", price: 100 },
+      { name: "Mercedes-Benz C-Class", image: "https://www.mbusa.com/content/dam/mb-nafta/us/myco/my25/c-class/class-page/series/2025-C-SEDAN-CT-1-6-01-DR.jpg", price: 110 },
+      { name: "Volkswagen Golf", image: "https://uploads.vw-mms.de/system/production/images/vwn/080/801/images/74efb38963e4bd0d12f0a76d427252477851e28e/DB2024AU00109_web_1600.jpg?1736327869", price: 50 },
+      { name: "Hyundai Elantra", image: "https://images.dealer.com/autodata/us/640/2021/USD10HYC021A0/USD10HYC021E021001.jpg", price: 45 },
+      { name: "Kia Seltos", image: "https://imgd.aeplcdn.com/664x374/n/ima73cb_1726651.jpg?q=80", price: 65 },
+      { name: "Nissan Altima", image: "https://www-europe.nissan-cdn.net/content/dam/Nissan/nissan_middle_east/vehicles/altima/MY25/grades/ALTIMA-SV.webp", price: 58 },
+      { name: "Chevrolet Malibu", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNbUB2L-tU9pSjk5_zhtexVmpUu5rmESROSw&s", price: 52 },
+      { name: "Subaru Outback", image: "https://www.subarukenya.com/images/2023/01/24/e0fdf8bb3446f894ace061a9eebe8d.png", price: 70 },
+      { name: "Mazda CX-5", image: "https://di-uploads-pod23.dealerinspire.com/hodgesmazda/uploads/2025/05/hodges-mazda_cx-5-colors-hvp-2025-polymetal-gray-jelly.png", price: 68 },
+      { name: "Tesla Model 3", image: "https://cdn-www.pod-point.com/model-3-21-white-background.jpg?v=1611831804", price: 150 },
+      { name: "Jeep Wrangler", image: "https://www.jeep.co.uk/content/dam/jeep/crossmarket/wrangler-full-model-mca-2024/02-trim-selector/sahara/figurines/uk/JEEP-WRANGLER-SAHARA-MY25-PHEV-BLACK-FIGURINES.png", price: 85 },
+      { name: "Land Rover Defender", image: "https://inkasarmored.com/wp-content/uploads/INKAS-Armored-Land-Rover-Defender-01.jpg", price: 130 },
+      { name: "Volvo XC90", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQLzSJZQgPBLDxi_tZTPTrxdNQN7QHy0Vs8vQ&s", price: 115 },
+      { name: "Jaguar F-Type", image: "https://www.exoticcarhacks.com/wp-content/uploads/2024/05/yBSbHGOi-scaled.jpeg", price: 140 },
+      { name: "Acura TLX", image: "https://www.acura.ca/-/media/Brands/Acura/Models/TLX/2024/Overview/02_Key-Features/MY24_TLX_1036x584_Desktop_OverviewKeyFeatures.png?h=583&iar=0&w=1036&rev=12bef195e80e41aa95681b71dbda97ca&hash=5CE2610622C832C674D48B59064C082F", price: 95 },
+      { name: "Infiniti Q50", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUA9FOgs04ByuTWl0KXNQtdIoVCE46UKCLUA&s", price: 98 },
+      { name: "Mitsubishi Outlander", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNsTD1QyvPEFKaeBKtRYpfGQCzv_UWbiuDpg&s", price: 75 },
+      { name: "Mini Cooper", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQhYJiTVYAfV0Q_luxVj7dtZ8eZu4nrR8KxHA&s", price: 70 },
+      { name: "Toyota RAV4", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT2hatAhd8N5RiNd_ETRQX8ci_azAdgzJHu4w&s", price: 72 },
+      { name: "Honda CR-V", image: "https://www.greenncap.com/wp-content/uploads/honda-cr-v-2024-0188.png", price: 70 },
+      { name: "Ford Explorer", image: "https://d2qldpouxvc097.cloudfront.net/image-by-path?bucket=a5-gallery-serverless-prod-chromebucket-1iz9ffi08lwxm&key=450239%2Ffront34%2Flg%2Fe7e7e7", price: 80 },
+      { name: "Chevrolet Tahoe", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSijIHjTPDB2HSQPDvf9zs1bkysE77ivK3m1w&s", price: 105 },
+      { name: "Dodge Charger", image: "https://di-uploads-pod15.dealerinspire.com/orangecoastchryslerjeepdodgeram/uploads/2021/06/2021-Dodge-Charger-2021-Dodge-Charger-Overview-Left.jpg", price: 92 },
+      { name: "Tesla Model X", image: "https://stimg.cardekho.com/images/carexteriorimages/930x620/Tesla/Model-X/5253/1611841733029/front-left-side-47.jpg", price: 180 },
+      { name: "BMW M3", image: "https://bmw.scene7.com/is/image/BMW/g80_g20-m340_dynamics_m-sport-differential_fb?qlt=80&wid=1024&fmt=webp", price: 160 },
+      { name: "Audi Q7", image: "https://imagecdnsa.zigwheels.ae/large/gallery/color/2/1968/audi-q7-color-649117.jpg", price: 135 },
+      { name: "Mercedes-Benz GLC", image: "https://images.autox.com/uploads/2024/06/Mercedes-Benz-GLC-Obsidian-Black-500x261.jpg", price: 125 }
+    ];
+
+    function loadCars() {
+      const carList = document.getElementById("car-listing-section");
+      carList.innerHTML = "";
+      cars.forEach(car => {
+        const carDiv = document.createElement("div");
+        carDiv.className = "car";
+        const carDetailsUrl = `car_details.html?name=${encodeURIComponent(car.name)}&image=${encodeURIComponent(car.image)}&price=${encodeURIComponent(car.price)}`;
+        carDiv.innerHTML = `
+          <a href="${carDetailsUrl}" target="_blank">
+            <img src="${car.image}" alt="${car.name}">
+          </a>
+          <div class="car-details">
+            <h3><a href="${carDetailsUrl}" target="_blank">${car.name}</a></h3>
+            <p>Price: $${car.price}/day</p>
+            <a href="${carDetailsUrl}" class="book-button-link" target="_blank">
+              <button>Book</button>
+            </a>
+          </div>
+        `;
+        carList.appendChild(carDiv);
+      });
+    }
+
+    function filterCars() {
+      const query = document.getElementById("search").value.toLowerCase();
+      const carList = document.getElementById("car-listing-section");
+      carList.innerHTML = "";
+      cars.filter(car => car.name.toLowerCase().includes(query)).forEach(car => {
+        const carDiv = document.createElement("div");
+        carDiv.className = "car";
+        const carDetailsUrl = `car_details.html?name=${encodeURIComponent(car.name)}&image=${encodeURIComponent(car.image)}&price=${encodeURIComponent(car.price)}`;
+        carDiv.innerHTML = `
+          <a href="${carDetailsUrl}" target="_blank">
+            <img src="${car.image}" alt="${car.name}">
+          </a>
+          <div class="car-details">
+            <h3><a href="${carDetailsUrl}" target="_blank">${car.name}</a></h3>
+            <p>Price: $${car.price}/day</p>
+            <a href="${carDetailsUrl}" class="book-button-link" target="_blank">
+              <button>Book</button>
+            </a>
+          </div>
+        `;
+        carList.appendChild(carDiv);
+      });
+    }
+
+    function confirmExit() {
+  if (confirm("Are you sure you want to exit?")) {
+    window.location.href = "index.html";
+  }
+}
+
+
+    function navigate(section) {
+      alert(`Navigating to ${section} section...`);
+    }
+
+    window.onload = () => {
+      loadCars();
+    }
+  </script>
+</body>
+</html>

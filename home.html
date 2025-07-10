@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home - Car Rental System</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #0c3b6c;
+      color: white;
+    }
+
+    nav {
+      background-color: #002b5c;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 20px;
+      flex-wrap: wrap;
+    }
+
+    nav .brand {
+      display: flex;
+      align-items: center;
+    }
+
+    nav img {
+      height: 50px;
+      margin-right: 10px;
+    }
+
+    nav h1 {
+      font-size: 24px;
+      margin: 0;
+    }
+
+    nav a {
+      color: white;
+      margin: 0 10px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: color 0.3s;
+    }
+
+    nav a:hover,
+    nav a.active {
+      color: orange;
+    }
+
+    main {
+      padding: 40px 20px;
+    }
+
+    h2 {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+
+    p {
+      font-size: 18px;
+      max-width: 600px;
+    }
+
+    .btn {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: orange;
+      color: #002b5c;
+      text-decoration: none;
+      font-weight: bold;
+      border-radius: 6px;
+      transition: background-color 0.3s;
+    }
+
+    .btn:hover {
+      background-color: #ffae42;
+    }
+
+    footer {
+      text-align: center;
+      padding: 15px 10px;
+      background-color: #002b5c;
+      color: #aaa;
+      font-size: 14px;
+    }
+
+    @media (max-width: 600px) {
+      nav {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      nav a {
+        margin: 5px 0;
+      }
+    }
+  </style>
+  <script>
+    window.onload = () => {
+      console.log("Welcome to Home Page");
+
+      // Highlight current page in nav
+      const currentPage = location.pathname.split("/").pop();
+      const navLinks = document.querySelectorAll("nav a");
+
+      navLinks.forEach(link => {
+        if (link.getAttribute("href") === currentPage || link.getAttribute("href") === "") {
+          link.classList.add("active");
+        }
+      });
+
+      // Dynamic greeting
+      const greeting = document.getElementById("greeting");
+      const hour = new Date().getHours();
+      let message = "Welcome to our Car Rental Service!";
+
+      if (hour < 12) message = "Good Morning! Ready to rent a car?";
+      else if (hour < 18) message = "Good Afternoon! Let's find your ride.";
+      else message = "Good Evening! Book your next adventure.";
+
+      greeting.textContent = message;
+    }
+  </script>
+</head>
+<body>
+  <header>
+    <nav>
+      <div class="brand">
+        <img src="https://i.pinimg.com/736x/73/5a/70/735a70b1abc4bfed1c0f86539fc3fa9c.jpg" alt="Car Rental Logo">
+        <h1>Car Rental System</h1>
+      </div>
+      <div>
+        <a href="index.html">Home</a>
+        <a href="pro.html">Cars</a>
+        <a href="supercars.html">Book Now</a>
+        <a href="contact.html">Contact</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <h2 id="greeting">Welcome!</h2>
+    <p>We offer a wide range of vehicles at competitive prices. Whether you're planning a road trip or need a car for daily use, we have the perfect option for you.</p>
+    <a href="pro.html" class="btn">Browse Cars</a>
+  </main>
+
+  <footer>
+    &copy; 2025 Car Rental System. All rights reserved.
+  </footer>
+</body>
+</html>

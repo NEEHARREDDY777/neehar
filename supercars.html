@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Car Rental Home</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRe5dyqi7uPtolye9q5DWEPOeTvhYgMrjyZw&s') no-repeat center center fixed;
+      background-size: cover;
+    }
+    header {
+      background-color: #333;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+    }
+    header img.logo {
+      height: 50px;
+      transition: transform 0.3s ease, filter 0.3s ease;
+    }
+    header img.logo.active {
+      transform: scale(1.2);
+      filter: hue-rotate(180deg) saturate(4) brightness(1.1);
+    }
+    .search-bar {
+      margin-right: 20px;
+    }
+    .search-bar input {
+      padding: 8px;
+      border-radius: 4px;
+      border: none;
+      width: 200px;
+    }
+    .car-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+    .car-card {
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      transition: transform 0.2s ease;
+    }
+    .car-card:hover {
+      transform: scale(1.02);
+    }
+    .car-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+    .car-details {
+      padding: 15px;
+    }
+    .car-details h3 {
+      margin: 0 0 10px;
+    }
+    .car-details p {
+      margin: 5px 0;
+    }
+    .book-btn {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    .book-btn:hover {
+      background-color: #218838;
+    }
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      display: none;
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-content {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      width: 300px;
+      text-align: center;
+    }
+    .modal-content input {
+      width: 90%;
+      padding: 8px;
+      margin: 10px 0;
+    }
+    .modal-content button {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+ <header>
+  <div style="display: flex; align-items: center; gap: 15px;">
+    <img src="https://images-platform.99static.com//C86dpN66exfkZPRMadAyxFJZ0z4=/307x1:1074x768/fit-in/500x500/99designs-contests-attachments/59/59172/attachment_59172191" alt="Logo" class="logo" id="logoIcon" />
+    <h1>Car Rental Management System</h1>
+  </div>
+  <div class="search-bar">
+    <input type="text" id="searchInput" placeholder="Search cars...">
+  </div>
+  <a href="index.html" style="text-decoration: none;">
+    <button style="padding: 8px 16px; background-color: #251a1b; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+      Home
+    </button>
+  </a>
+</header>
+
+  <main class="car-container" id="carContainer"></main>
+
+  <div class="modal" id="bookingModal">
+    <div class="modal-content">
+      <h3>Booking Details</h3>
+      <input type="number" id="daysInput" placeholder="Number of Days" />
+      <input type="text" id="locationInput" placeholder="Pickup Location" />
+      <button onclick="submitBooking()">Submit</button>
+    </div>
+  </div>
+
+  <script>
+    const logoIcon = document.getElementById("logoIcon");
+    logoIcon.addEventListener("click", () => {
+      logoIcon.classList.toggle("active");
+    });
+
+    const cars = [
+      { name: "McLaren 750S", url: "https://www.indiacarnews.com/wp-content/uploads/2024/01/McLaren-750S-Features.jpg", price: "₹35,000/day", fuel: "Petrol", mileage: "7.8 km/l", transmission: "Automatic", seating: "2" },
+      { name: "Lamborghini Aventador", url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTl7VZyawrtTiRKteWBvRU3pyRBztbA4mi0ew&s", price: "₹34,000/day", fuel: "Petrol", mileage: "7 km/l", transmission: "Automatic", seating: "2" },
+      { name: "Ferrari F8 Tributo", url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRWfdYBLNh09LCvyHYBdh4nIbMXEmu5L4KP9Q&s", price: "₹33,000/day", fuel: "Petrol", mileage: "8.5 km/l", transmission: "Automatic", seating: "2" },
+      { name: "Bugatti Chiron", url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8BzkMke6GLlko-xHoEkZA444xNAZ33px8FA&s", price: "₹32,000/day", fuel: "Petrol", mileage: "5 km/l", transmission: "Automatic", seating: "2" },
+      { name: "Rolls Royce Phantom", url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRW1B3pq-zcdRsna_wCIAqGqFr2JRe2TQjoSw&s", price: "₹31,000/day", fuel: "Petrol", mileage: "9.8 km/l", transmission: "Automatic", seating: "5" },
+      { name: "Bentley Continental GT", url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiWaYBh3gnF3VFzdJMrdlyB9OHyLj66gM9gA&s", price: "₹30,000/day", fuel: "Petrol", mileage: "9.5 km/l", transmission: "Automatic", seating: "4" },
+      { name: "Aston Martin DB11", url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSaXWt3Le-H-o1czXZFr66-xW_pzAyqS0PwSQ&s", price: "₹29,000/day", fuel: "Petrol", mileage: "8.8 km/l", transmission: "Automatic", seating: "2+2" },
+      { name: "Porsche 911 Turbo S", url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRY5FRVxsjh1WhgE_2b-d0Pw4Rd-d_n8qRVDA&s", price: "₹28,000/day", fuel: "Petrol", mileage: "10.5 km/l", transmission: "Automatic", seating: "4" },
+      { name: "BMW i8", url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYepDBYYKae0YJ0XkF_GDmC4v-aIxu_QzYCg&s", price: "₹27,000/day", fuel: "Hybrid", mileage: "47.5 km/l", transmission: "Automatic", seating: "4" },
+      { name: "Audi R8", url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsBM-tPLsxRiO3h2WqiYmvw3osxYOB62C0Yw&s", price: "₹26,000/day", fuel: "Petrol", mileage: "7.75 km/l", transmission: "Automatic", seating: "2" },
+      { name: "Mercedes AMG GT", url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQgL1NE5zAMVc103l5fXndrAGG7ZNyyfxwN6A&s", price: "₹25,000/day", fuel: "Petrol", mileage: "8 km/l", transmission: "Automatic", seating: "2" },
+      { name: "Ferrari 250 GTO", url: "https://scalearts.in/cdn/shop/files/1962-Ferrari-250-GTO-24-1-18-Kyosho-scale-model-car-collectible-1_grande.jpg?v=1743505715", price: "₹24,000/day", fuel: "Petrol", mileage: "6.1 km/l", transmission: "Manual", seating: "2" },
+      { name: "Pagani Huayra", url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4E-TN9iO5WaU0BKNpkFEY15u5J25WZoCDMA&s", price: "₹23,000/day", fuel: "Petrol", mileage: "6.8 km/l", transmission: "Automatic", seating: "2" },
+      { name: "Koenigsegg Jesko", url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShk4R_YgiQ37p1EKcMnsV_Y7V9xGmeIJ_fgw&s", price: "₹22,000/day", fuel: "Petrol", mileage: "7 km/l", transmission: "Automatic", seating: "2" },
+      { name: "Tesla Model S Plaid", url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQOt5MEsHahluIdHiRdhJW-HjwpsPLLSeNkXg&s", price: "₹21,000/day", fuel: "Electric", mileage: "628 km/charge", transmission: "Automatic", seating: "5" },
+      { name: "Ford Mustang GT", url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4_muHgCHY3v1iPniytjWiVvX4jwEfr0nwxg&s", price: "₹20,000/day", fuel: "Petrol", mileage: "7.9 km/l", transmission: "Manual", seating: "4" },
+      { name: "Chevrolet Camaro SS", url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIF-6GdAOLFEtAUiDFVKAdouAMBU2Mo2iEMA&s", price: "₹19,000/day", fuel: "Petrol", mileage: "8.7 km/l", transmission: "Manual", seating: "4" },
+      { name: "Nissan GT-R", url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDioBfUPnlxvS1dVzNqVdETBvEPKOK4LlG1g&s", price: "₹18,000/day", fuel: "Petrol", mileage: "9 km/l", transmission: "Automatic", seating: "4" },
+      { name: "Lexus LC 500", url: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/2013-03-05_Geneva_Motor_Show_7846.JPG/960px-2013-03-05_Geneva_Motor_Show_7846.JPG", price: "₹17,000/day", fuel: "Petrol", mileage: "10.3 km/l", transmission: "Automatic", seating: "4" },
+      { name: "Jaguar F-Type", url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEiTr8TLIhykJK5fHaja4QjnQIj1IrMBl27g&s", price: "₹16,000/day", fuel: "Petrol", mileage: "9 km/l", transmission: "Automatic", seating: "2" },
+      { name: "Mazda RX-7", url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTwDHqlVR8a_nUIawodnFq2_2kDkeyVyOJKrg&s", price: "₹15,000/day", fuel: "Petrol", mileage: "9.5 km/l", transmission: "Manual", seating: "4" },
+      { name: "Subaru WRX STI", url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSN5TXp6-9BQidxn8ZRxz6DffgnIT-7Hj87g&s", price: "₹14,000/day", fuel: "Petrol", mileage: "10.4 km/l", transmission: "Manual", seating: "5" },
+      { name: "Dodge Challenger SRT", url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUg05jpqks1JghVrhMTMikxWiJQAAUEODvjQ&s", price: "₹13,000/day", fuel: "Petrol", mileage: "7.1 km/l", transmission: "Manual", seating: "5" },
+      { name: "Toyota Supra", url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSDu-2OckgBH4f3pVDegEtr3niC_r1KqEJBlQ&s", price: "₹12,000/day", fuel: "Petrol", mileage: "12.3 km/l", transmission: "Automatic", seating: "2+2" },
+      { name: "Volkswagen Golf R", url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQM6ArqGx6IujoQJajW-PawjmIalUlGwnqWhg&s", price: "₹11,000/day", fuel: "Petrol", mileage: "12.4 km/l", transmission: "Automatic", seating: "5" },
+      { name: "Mini Cooper S", url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTKbydMOX682jQ-lcxOYLW20kDkDWMf4nKCug&s", price: "₹10,000/day", fuel: "Petrol", mileage: "16.35 km/l", transmission: "Automatic", seating: "4" }
+    ];
+
+    const container = document.getElementById("carContainer");
+    const modal = document.getElementById("bookingModal");
+    let currentCar = null;
+
+    function showBookingModal(carName) {
+      currentCar = carName;
+      modal.style.display = "flex";
+    }
+
+    function submitBooking() {
+      const days = parseInt(document.getElementById("daysInput").value);
+      const location = document.getElementById("locationInput").value.trim();
+
+      if (!isNaN(days) && location) {
+        if (days > 15) {
+          alert(`Booking for ${currentCar} is not available for more than 15 days.`);
+        } else {
+          alert(`Booking confirmed for ${currentCar} for ${days} days at ${location}`);
+        }
+        modal.style.display = "none";
+      } else {
+        alert("Please fill in all fields correctly");
+      }
+    }
+
+    window.onclick = function(event) {
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    }
+
+    function displayCars(carList) {
+      container.innerHTML = "";
+      carList.forEach((car) => {
+        const card = document.createElement("div");
+        card.className = "car-card";
+        card.innerHTML = `
+          <img src="${car.url}" alt="${car.name}" />
+          <div class="car-details">
+            <h3>${car.name}</h3>
+            <p><strong>Price:</strong> ${car.price}</p>
+            <p><strong>Fuel Type:</strong> ${car.fuel}</p>
+            <p><strong>Mileage:</strong> ${car.mileage}</p>
+            <p><strong>Transmission:</strong> ${car.transmission}</p>
+            <p><strong>Seating:</strong> ${car.seating}</p>
+            <button class="book-btn" onclick="showBookingModal('${car.name}')">Book Now</button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    document.getElementById("searchInput").addEventListener("input", function () {
+      const query = this.value.toLowerCase();
+      const filtered = cars.filter(car => car.name.toLowerCase().includes(query));
+      displayCars(filtered);
+    });
+
+    displayCars(cars);
+  </script>
+  <!-- Exit Button at the Bottom -->
+  <div style="text-align: center; padding: 20px;">
+    <a href="index.html" style="
+      display: inline-block;
+      background-color: #dc3545;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 5px;
+      text-decoration: none;
+      font-weight: bold;
+    ">Exit</a>
+  </div>
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Car Details - Car Rental System</title>
+  <style>
+    body {
+      background: url('https://mobiag.com/wp-content/uploads/2019/06/car-rental-fleet.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+      margin: 0;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      padding: 40px;
+      background-color: rgba(128, 128, 128, 0.8); 
+      border-radius: 10px;
+      margin: 20px;
+      text-align: center;
+      max-width: 600px;
+      width: 100%;
+    }
+
+    .container img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+
+    .container h2 {
+      margin-top: 0;
+      font-size: 2.5em;
+    }
+
+    .container p {
+      font-size: 1.2em;
+      margin-bottom: 10px;
+    }
+
+    .container button {
+      padding: 12px 25px;
+      border: none;
+      border-radius: 5px;
+      background-color: orange;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      font-size: 1.1em;
+      margin-top: 20px;
+      margin-right: 10px;
+    }
+
+    .container button:hover {
+      background-color: darkorange;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2 id="carName"></h2>
+    <img id="carImage" src="" alt="Car Image">
+    <p><strong>Price per day:</strong> <span id="carPrice"></span></p>
+    <p><strong>Availability:</strong> In Stock</p>
+    <button onclick="confirmBooking()">Confirm Booking</button>
+    <button onclick="window.location.href='pro.html'">Go Back</button>
+  </div>
+
+  <script>
+    function getUrlParameter(name) {
+      name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+      var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+      var results = regex.exec(location.search);
+      return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+    }
+
+    window.onload = () => {
+      const name = getUrlParameter('name');
+      const image = getUrlParameter('image');
+      const price = getUrlParameter('price');
+
+      document.getElementById('carName').innerText = name;
+      document.getElementById('carImage').src = image;
+      document.getElementById('carImage').alt = name;
+      document.getElementById('carPrice').innerText = `$${price}`;
+    };
+
+    function confirmBooking() {
+      const carName = document.getElementById('carName').innerText;
+      const userName = prompt(`Please enter your name to confirm booking for ${carName}:`);
+      if (userName) {
+        alert(`${userName}, your booking for ${carName} has been successfully confirmed!`);
+        window.location.href = 'index.html'; // Redirect to home or confirmation page
+      }
+    }
+  </script>
+</body>
+</html>
